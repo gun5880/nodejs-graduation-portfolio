@@ -1,0 +1,293 @@
+
+<!-- 책 자세히 보기 페이지 -->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>오늘 뭐 읽지?</title>
+
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+			body        { padding-top:80px; 
+				font-family: Georgia;
+			}
+			
+			.headerContainer{
+				width: 100%;
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+			}
+
+			.bodyContainer{
+				
+				margin-left: auto;
+				margin-right: auto;
+				width: 100%;
+			}
+
+			.memberlist{
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			.listDiv{
+				background-color: white;
+				margin: 0;
+				padding: 0;
+				width: 100%;
+			}
+
+			.repleList{
+				background-color: floralwhite;
+				margin-bottom: 3%;
+			}
+
+			.page-footer {
+   				padding-top: 9px;
+				margin: auto;
+				margin-top: 20px;
+				width: 58%;
+   				 /* border-bottom: 1px solid #eee; */
+			}
+
+		</style>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		
+		<script>
+			$(function(){
+				//평가 남기기 버튼 눌렀을 때 이벤트
+				$('.replyButton').on('click', function(){
+
+
+					// 클릭 이벤트로 div를 화면에서 지웠다 보여줬다 한다.
+					$(".repleBodyContain").html(" ");
+
+					var id = $("#bookId").val();
+					$('.reple_contain').css("display", "block");
+					$('.repleBodyContain').css("display", "block");
+					$('.bodyContainer').css("display", "none");
+
+					$.ajax({ //비동기식으로 평가를 남긴다.
+                      url: '/replyList', 
+                      dataType: 'json',
+                      type: 'POST',
+					  data: {id:id},
+                      success: function(result) {
+                          if (result) {
+							for(var i in result){
+								// append함수를 사용하여 방금 달은 평가를 화면에 뿌려준다.
+								$(".repleBodyContain").append('<div class="repleList card-body" style="background-color: ghostwhite">'+
+									'<h4 class="card-title">'+result[i].r_writer+'</h4></div>');
+							}
+						  }
+                      }
+				  });
+
+				})
+
+				//책정보 버튼
+				$('.infoButton').on('click', function(){
+					$('.reple_contain').css("display", "none");
+					$('.repleBodyContain').css("display", "none");
+					$('.bodyContainer').css("display", "block");
+				})
+
+				//좋아요 버튼
+				$('.likeButton').on("click", function(){
+					var id = $("#bookId").val();
+					$.ajax({
+					  url: '/likeUp', 
+                      dataType: 'json',
+                      type: 'POST', //POST, JSON형식으로 데이터를 보냄
+					  data: {id:id
+						},
+                      success: function(result) { //성공했을 시
+                          if (result) {
+							alert("좋아요!");
+                          }else{
+							alert("좋아요 실패");
+						  }
+					  }
+				  });
+
+
+				});
+
+				//즐겨찾기버튼
+				$('.bookmarkButton').on("click", function(){
+					var id = $("#bookId").val();
+					var email = $("#email").val();
+					var title = $("#book_title").val();
+					var img = $("#book_img").val();
+
+					$.ajax({
+					  url: '/addBookmark', 
+                      dataType: 'json',
+                      type: 'POST', //POST, JSON형식으로 데이터를 보냄
+					  data: {id:id,
+							email:email,
+							title:title,
+							img:img
+						},
+                      success: function(result) { //성공했을 시
+                          if (result) {
+							alert("즐겨찾기하셨습니다");
+                          }else{
+							alert("이미 즐겨찾기하셨습니다");
+						  }
+					  }
+				  });
+
+				})
+
+				//평가남기기버튼
+				$("#inputReply").on("click", function(){
+					var id = $("#bookId").val();
+					var reply = $("#reply").val();
+
+					$.ajax({
+                      url: '/insertReply',
+                      dataType: 'json',
+                      type: 'POST',
+					  data: {id:id,
+							reply:reply
+						},
+                      success: function(result) {
+                          if (result) {
+                             $(".repleBodyContain").append('<div class="repleList card-body" style="background-color: ghostwhite">'+
+									'<h4 class="card-title">'+reply+'</h4></div>');
+
+							$("#reply").val(" ");
+                          }
+                      }
+				  });
+				})
+				
+			})
+
+			//뒤로가기
+			function back(){
+				window.location.href = '/room_list';
+			}
+
+			//오늘 책 추천 버튼 (admin)
+			function todayBookCheck(){
+				var id = $("#bookId").val();
+
+				$.ajax({
+					  url: '/addTodayBook', 
+                      dataType: 'json',
+                      type: 'POST', //POST, JSON형식으로 데이터를 보냄
+					  data: {id:id
+						},
+                      success: function(result) { //성공했을 시
+                          if (result) {
+							alert("선정하였습니다.");
+                          }else{
+							alert("이미 추가했다");
+						  }
+					  }
+				  });
+			}
+
+			
+		</script>
+		
+		
+    
+	</head>
+	<body>
+		<div class="container">
+			
+ 
+			<div class=" jumbotron headerContainer" style="background-color: floralwhite;">
+		
+			   <h2 class="card-title">오늘의 책으로 어떠신가요?</h2>
+
+			   
+		
+			</div>
+			<button class="btn btn-dark" onclick="back()">
+					뒤로가기
+			</button>
+			<button class="btn btn-primary replyButton">
+					느낀 점 및 평가
+			</button>
+
+			<button class="btn btn-warning infoButton">
+					책 정보
+			</button>
+
+			<button class="btn btn-primary likeButton" style="float: right;">
+					좋아요
+			</button>
+
+			<button class="btn btn-primary bookmarkButton" style="float: right; margin-right: 3px;">
+					즐겨찾기
+			</button>
+
+			<!-- admin일시 오늘 책 지정하는거 보여줌 -->
+			<% if(user.email == "admin"){%>
+				<button class="btn btn-info"  style="float: right; margin-right: 3px;"onclick="todayBookCheck()">오늘의 책으로 지정</button>
+			<%}%>
+		</div>
+
+		<!-- 책 _id 비밀저장 -->
+		<input type="hidden" value="<%=detailRoom._id%>" id="bookId" name="book_id"/>
+		<input type="hidden" value="<%=user.email%>" id="email" name="email"/>
+		<input type="hidden" value="<%=detailRoom.room_name%>" id="book_title" name="book_title"/>
+		<input type="hidden" value="<%=detailRoom.book_img%>" id="book_img" name="book_img"/>
+
+
+		<div class="container main_container">
+ 
+			<div class="bodyContainer jumbotron" style="height: 600px;">
+				<div class="imgContain" style="float: left; width: 50%;">
+					<img src="../uploads/<%=detailRoom.book_img%>" style="width: 80%; height: 500px; margin-right: 10%;"/>
+				</div>
+				
+				<div class="introContain" style="float: left; width: 50%;">
+					<ul style="list-style-type: none;">
+						<li><strong>책 제목</strong> <h4 class="card-title"><%= detailRoom.room_name%></h4></li>
+						<li><strong>저자</strong><h4 class="card-title"> <%= detailRoom.writer%></h4></li>
+
+						
+						<li><strong>카테고리</strong><h4 class="card-title"> <%= detailRoom.category%></h4></li>
+						<li><strong>줄거리</strong><h4 class="card-title"> <%= detailRoom.room_intro%></h4></li>
+					</ul>
+				</div>	
+				
+			
+			</div>
+
+			<!-- 평가 남겨지는 div -->
+			<div class="repleBodyContain jumbotron" style="height: 800px; display: none;">
+				
+			</div>
+		</div>
+
+		<div class="container reple_contain" style="display: none;">
+ 
+			<div class="textContainer jumbotron" style="height: 200px; ">		
+					<textarea style="width: 100%;" name="reply" id="reply"></textarea>
+					<button id="inputReply" class="btn btn-success" style="float: right; margin-top: 5px;">남기기</button>
+			</div>
+		</div>
+
+		<div style="text-align: center;">
+				<hr class="page-footer">
+				<h5 style="color: lightgray;">@What are you reading today?</h5>
+		</div>
+
+	</body>
+</html>

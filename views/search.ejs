@@ -1,0 +1,121 @@
+<!-- 검색한 페이지 -->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>오늘 뭐 읽지?</title>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+			body        { padding-top:80px; }
+			
+			.page-footer {
+   				 padding-top: 9px;
+   				 margin: 40px 0 20px;
+   				 /* border-bottom: 1px solid #eee; */
+			}
+		</style>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		
+		<script>
+			$(function() {
+				$(".well").on('click',function(){
+					var id = $(this).find('input').val();
+					$("#main_id").val(id);
+					detailRoom();
+				})
+
+				var color = $(".well").css("backgroundColor");
+
+				$(".well").hover(function(){
+					$(this).css("backgroundColor", "#BDBDBD");
+				},function(){
+					$(this).css("backgroundColor", color);
+				});
+			});
+
+			//방만들기 페이지
+			function createRoom(){
+				window.location.href = '/create_room';
+			}
+
+			//뒤로가기
+			function back(){
+				window.location.href = '/room_list';
+			}
+
+			//오늘 책 추천 페이지
+			function todaybook(){
+				window.location.href = '/todaybook';
+			}
+
+			//서브밋 버튼 누르기
+			function detailRoom(){
+				$("#form").submit();
+			}
+		</script>
+		
+    
+	</head>
+	<body>
+		
+		<div class="container">			
+						
+			<div class="page-header text-center">
+				<h1><strong>"<%=input%>" 검색 결과</strong></h1>
+				<button class="btn btn-dark" style="float: left; margin-right: 5px;" onclick="back()">뒤로 가기</button>
+				<button class="btn btn-info" style="float: left; margin-right: 5px;" onclick="todaybook()">오늘의 책</button>
+				
+				<button class="btn btn-warning" style="float: right; margin-right: 5px;" onclick="createRoom()">자유 게시판</button>
+			
+			</div>
+			<br>
+		    <div class="row">
+				<form style="display: hidden" action="/room_detail" method="POST" id="form">
+					<input type="hidden" id="main_id" name="id" value=""/>
+				</form>
+				<% for(var i=0; i < booklist.length; i++){ %>
+
+					<div class="col-sm-6 list">
+						<div class="well" style="width: 80%; float: left; height: 200px">
+							<input type="hidden" id="asdasd" name="hidden_id" value="<%=booklist[i]._id%>"/>
+							
+							<% if (user.provider == undefined || user.provider == '') { %>
+								<h4>
+								<% if(booklist){%>
+									<%=booklist[i].room_name%>
+								<%}%>
+								</h4>
+								<br>
+								<p>
+									<strong>카테고리: <%=booklist[i].category%></strong><br>
+									<strong>저자: <%=booklist[i].writer%></strong><br>
+									<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" style="margin-right: 5px;"></span><strong><%=booklist[i].like%></strong>
+									
+								</p>
+							<% } %>
+							
+						</div>
+						<img src="../uploads/<%=booklist[i].book_img%>" style="float: right; width: 20%; height: 200px;" alt="My Image"/>
+					</div>
+				
+				<%}%>
+		
+			</div>
+			
+			<div style="text-align: center;">
+				
+				<hr class="page-footer">
+				<h5 style="color: lightgray;">@What are you reading today?</h5>
+			</div>
+			
+		</div>	
+			
+	</body>
+</html>

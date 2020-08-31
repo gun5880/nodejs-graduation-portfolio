@@ -1,0 +1,65 @@
+<!-- 첫 페이지이자 로그인 및 회원가입 페이지 -->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>오늘 뭐 읽지?</title>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+        	body { padding-top:80px; }
+        	
+			@font-face {
+				font-family: 'Nanum Gothic'; font-style: normal; font-weight: 400;
+				src: url('../public/NanumGothic-Regular.eot');
+				src: local('NanumGothic'),
+					url('../public/NanumGothic-Regular.eot?#iefix') format('embedded-opentype'),
+					url('../public/NanumGothic-Regular.woff2') format('woff2'),
+					url('../public/NanumGothic-Regular.woff') format('woff'),
+					url('../public/NanumGothic-Regular.ttf') format('truetype');
+			}
+        	
+			h1, p, a { font-family: 'Nanum Gothic' }
+			
+			.jumbotron{
+				background-color: burlywood;
+				margin-top: 10%;
+				
+			}
+
+			.main_container{
+				width: 70%;
+				
+			}
+    	</style>
+    
+	</head>
+	<body>
+		<div class="container main_container">
+		    <div class="jumbotron text-center">
+				<h1 style="color: cornsilk;">오늘 뭐 읽지?</h1>
+				<h4 style="margin-top: 3%;">관심이 있으신가요?</h4>
+				<br>
+				<% if (login_success) { %>
+					<p>로그인되어 있습니다.</p>
+					<br>
+					<a href="/room_list" class="btn btn-primary">목록 보기</a>
+					<a href="/logout" class="btn btn-default">로그아웃</a>
+				<% } else { %>
+			        <a href="/login" class="btn btn-primary" style="margin-right: 10px; width: 10%;"></span>로그인</a>
+			        <a href="/signup" class="btn btn-warning" style="width: 10%;"></span>회원가입</a>
+					<br>
+				<% } %>
+				
+		    </div>
+		
+		</div>
+
+		
+	</body>
+</html>

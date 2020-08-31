@@ -1,0 +1,98 @@
+<!-- 오늘의 책 페이지 -->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>오늘 뭐 읽지?</title>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+			body        { padding-top:80px; }
+			
+			.page-footer {
+   				 padding-top: 9px;
+   				 margin: 40px 0 20px;
+   				 /* border-bottom: 1px solid #eee; */
+			}
+
+			.repleList{
+				background-color: floralwhite;
+				margin-bottom: 3%;
+			}
+		</style>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		
+		<script>
+
+			function back(){
+				window.location.href = '/room_list';
+			}
+		</script>
+		
+    
+	</head>
+	<body>
+		
+		<div class="container">			
+						
+			<div class="page-header text-center">
+				<h1><strong>오늘 이 책은 어떠신가요?</strong></h1>
+				<button class="btn btn-dark" style="float: left; margin-right: 5px;" onclick="back()">뒤로 가기</button>
+				<button class="btn btn-warning" style="float: right; margin-right: 5px;" onclick="createRoom()">자유 게시판</button>
+			
+			</div>
+			<br>
+
+			<!-- body -->
+		    <div class="row">
+				<div class="bodyContainer jumbotron" style="height: 600px;">
+					<div class="imgContain" style="float: left; width: 50%;">
+						<img src="../uploads/<%=book.book_img%>" style="width: 80%; height: 500px; margin-right: 10%;"/>
+					</div>
+					
+					<div class="introContain" style="float: left; width: 50%;">
+						<ul style="list-style-type: none;">
+							<li><strong>TODAY</strong> <h4 class="card-title"><%=book.todaybook%></h4></li>
+							<li><strong>책 제목</strong> <h4 class="card-title"><%=book.room_name%></h4></li>
+							<li><strong>저자</strong><h4 class="card-title"><%=book.writer%></h4></li>
+							<li><strong>카테고리</strong><h4 class="card-title"><%=book.category%></h4></li>
+							<li><strong>줄거리</strong><h4 class="card-title"><%=book.room_intro%></h4></li>
+						</ul>
+					</div>	
+
+					
+				
+			
+				</div>
+
+				<!-- 오느릐 책에 달린 reply을 보여준다. -->
+				<div class="repleBodyContain jumbotron" style="height: 800px;">
+					<h4>REPLY</h4>
+					<%for(var i = 0; i < reply.length; i++){%>
+						<div class="repleList card-body" style="background-color: ghostwhite; height: 50px; border-radius: 3%;">
+								<h4 class="card-title" style="padding-top: 1.5%; padding-left: 2%;"><%=reply[i].r_writer%></h4>
+						</div>
+
+					<%}%>	
+
+				</div>
+				
+		
+			</div>
+			
+			<div style="text-align: center;">
+				
+				<hr class="page-footer">
+				<h5 style="color: lightgray;">@What are you reading today?</h5>
+			</div>
+			
+		</div>	
+			
+	</body>
+</html>

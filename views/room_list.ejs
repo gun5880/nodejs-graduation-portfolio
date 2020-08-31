@@ -1,0 +1,158 @@
+<!-- 로그인 했을 시 메인페이지이자 책 목록 페이지 -->
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+		
+		<title>오늘 뭐 읽지?</title>
+		
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    	
+    	<style>
+			body        { padding-top:80px; }
+			
+			.page-footer {
+   				 padding-top: 9px;
+   				 margin: 40px 0 20px;
+   				 /* border-bottom: 1px solid #eee; */
+			}
+		</style>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		
+		<script>
+			$(function() {
+				//책을 클릭 했을 시 자세히 보기 페이지로 감
+				$(".well").on('click',function(){
+
+					//hidden으로 되어있는 책 아이디를 form에 넣어 자세히보기로 넘어감
+					var id = $(this).find('input').val();
+					$("#main_id").val(id);
+					detailRoom();
+				})
+
+				var color = $(".well").css("backgroundColor");
+
+				$(".well").hover(function(){
+					$(this).css("backgroundColor", "#BDBDBD");
+				},function(){
+					$(this).css("backgroundColor", color);
+				});
+			});
+
+			//책 자세히 보기 
+			function detailRoom(){
+				$("#form").submit();
+			}
+
+			//admin이 책 데이터 넣는 페이지
+			function createRoom(){
+				window.location.href = '/create_room';
+			}
+
+			//본인 즐겨찾기 확인
+			function myBookmark(){
+				window.location.href = '/mybookmark';
+			}
+		
+			//즐겨찾기
+			function back(){
+				window.location.href = '/';
+			}
+
+			//자유게시판
+			function bulletinBoard(){
+				window.location.href = '/board/page/1';
+			}
+
+			//오늘의 책 확인
+			function todaybook(){
+				window.location.href = '/todaybook';
+			}
+
+			//검색 창 보여주기
+			function searchShow(){
+				$("#searhForm").css("display", "block");
+			}
+		</script>
+		
+    
+	</head>
+	<body>
+		
+		<div class="container">			
+						
+			<div class="page-header text-center">
+				<h1 class="card-title"><strong>오늘 뭐 읽지?</strong></h1>
+				<button class="btn btn-dark" style="float: left; margin-right: 5px;" onclick="back()">뒤로 가기</button>
+				<button class="btn btn-danger" style="float: left; margin-right: 5px;" onclick="todaybook()">오늘의 책</button>
+				<button class="btn btn-info" style="float: left; margin-right: 5px;" onclick="myBookmark()">즐겨찾기</button>
+
+				<!-- searchForm부분 -->
+				<form id="searhForm" style="display: none;" action="/search" method="GET">
+					<input  type="text" name="search" style="border-radius: 10%; float: left; margin-right: 5px; padding-top: 1%;">
+				</form>
+
+				<button class="btn btn-info" style="float: left;" onclick="searchShow()">검색</button>
+				
+				<button class="btn btn-warning" style="float: right; margin-right: 5px;" onclick="bulletinBoard()">자유 게시판</button>
+
+				<!-- admin일 시에만 데이터 넣는 메뉴 보여주기 -->
+				<% if(user.email == "admin"){%>
+					<button class="btn btn-primary" style="float: right; margin-right: 5px;" onclick="createRoom()">데이터 넣기</button>
+				<%}%>
+			
+			</div>
+			<br>
+		    <div class="row">
+				<form style="display: hidden" action="/room_detail" method="POST" id="form">
+					<input type="hidden" id="main_id" name="id" value=""/>
+				</form>
+
+				<!-- 쌓여있는 책 목록 갯수만큼 for문 반복 -->
+				<% for(var i=0; i < roomlist.length; i++){ %>
+
+					<div class="col-sm-6 list">
+						<div class="well" style="width: 80%; float: left; height: 200px">
+							<input type="hidden" id="asdasd" name="hidden_id" value="<%=roomlist[i]._id%>"/>
+							
+							<!-- 로그인 확인 -->
+							<% if (user.provider == undefined || user.provider == '') { %>
+								<h4>
+								<% if(roomlist){%>
+									<%=roomlist[i].room_name%>
+								<%}%>
+								</h4>
+								<br>
+								<p>
+									<strong>카테고리: <%=roomlist[i].category%></strong><br>
+									<strong>저자: <%=roomlist[i].writer%></strong><br>
+									<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" style="margin-right: 5px;"></span><strong><%=roomlist[i].like%></strong>
+									
+								</p>
+							<% } %>
+							
+						</div>
+						<img src="../uploads/<%=roomlist[i].book_img%>" style="float: right; width: 20%; height: 200px;" alt="My Image"/>
+					</div>
+				
+				<%}%>
+				
+		
+			</div>
+			
+			<!-- footer -->
+			<div style="text-align: center;">
+				
+				<hr class="page-footer">
+				<h5 style="color: lightgray;">@What are you reading today?</h5>
+			</div>
+			
+		</div>	
+			
+	</body>
+</html>
